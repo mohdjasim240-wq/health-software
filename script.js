@@ -131,6 +131,69 @@ const emotionTree = {
     reframe: "You’re stretching — not faking."
   },
 
+  "A conversation I’m nervous about.": [
+  "I’m afraid I’ll say the wrong thing.",
+  "I’m afraid of their reaction.",
+  "I don’t know how to express myself."
+],
+
+"I’m afraid I’ll say the wrong thing.": [
+  "I’ll sound stupid.",
+  "I’ll hurt them accidentally."
+],
+
+"I’ll sound stupid.": {
+  final: true,
+  insight: "You equate awkwardness with incompetence.",
+  deeper: "But real conversations aren’t scripted.",
+  reframe: "Clarity matters more than smoothness."
+},
+
+"I’ll hurt them accidentally.": {
+  final: true,
+  insight: "You care about their feelings.",
+  deeper: "That already makes you careful.",
+  reframe: "Honesty delivered gently builds trust."
+},
+
+"I’m afraid of their reaction.": [
+  "They might get angry.",
+  "They might withdraw."
+],
+
+"They might get angry.": {
+  final: true,
+  insight: "Anger feels threatening.",
+  deeper: "But disagreement doesn’t equal danger.",
+  reframe: "Emotions rise — then settle."
+},
+
+"They might withdraw.": {
+  final: true,
+  insight: "Silence feels like rejection.",
+  deeper: "But space doesn’t always mean distance.",
+  reframe: "Healthy connections survive discomfort."
+},
+
+"I don’t know how to express myself.": [
+  "I can’t find the right words.",
+  "I’m afraid I’ll freeze."
+],
+
+"I can’t find the right words.": {
+  final: true,
+  insight: "You want precision.",
+  deeper: "But connection doesn’t require perfection.",
+  reframe: "Speak honestly — refine later."
+},
+
+"I’m afraid I’ll freeze.": {
+  final: true,
+  insight: "Freezing is stress, not weakness.",
+  deeper: "Your body reacts before your thoughts.",
+  reframe: "Pause. Breathe. Continue."
+},
+
   // ================= PATH B =================
   // SELF-PERCEPTION
 
