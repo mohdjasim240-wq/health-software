@@ -421,58 +421,158 @@ function handleBubbleClick(text) {
   }, 300);
 }
 
+function createScatterEffect(x, y) {
+  const pieces = 15;
+
+  for (let i = 0; i < pieces; i++) {
+    const particle = document.createElement("div");
+    particle.classList.add("scatter-piece");
+
+    particle.style.left = x + "px";
+    particle.style.top = y + "px";
+
+    // Random spread direction
+    const angle = Math.random() * 2 * Math.PI;
+    const distance = 80 + Math.random() * 60;
+
+    const moveX = Math.cos(angle) * distance;
+    const moveY = Math.sin(angle) * distance;
+
+    particle.style.setProperty("--x", moveX + "px");
+    particle.style.setProperty("--y", moveY + "px");
+
+    bubbleContainer.appendChild(particle);
+
+    setTimeout(() => {
+      particle.remove();
+    }, 600);
+  }
+}
+
 function showFinalInsight(data) {
   bubbleContainer.innerHTML = "";
 
+  document.body.classList.add("calm-mode");
+
   const bubble = document.createElement("div");
   bubble.classList.add("bubble");
-  bubble.style.background = "rgba(255,255,255,0.12)";
-bubble.style.border = "1px solid rgba(255,255,255,0.25)";
 
+  bubble.style.background = "rgba(255,255,255,0.12)";
+  bubble.style.border = "1px solid rgba(255,255,255,0.25)";
   bubble.style.left = "50%";
   bubble.style.top = "50%";
   bubble.style.transform = "translate(-50%, -50%) scale(0.8)";
   bubble.style.maxWidth = "500px";
   bubble.style.textAlign = "center";
   bubble.style.padding = "30px";
+  bubble.style.animation = "none";
+  bubble.style.cursor = "grab";
 
   bubble.innerHTML = `
     <div style="font-size:18px; margin-bottom:12px;">
       ${data.insight}
     </div>
+
+    <div class="breathing-circle"></div>
+
     <div style="opacity:0.8; margin-bottom:15px;">
       ${data.deeper}
     </div>
+
     <div style="font-weight:600;">
       ${data.reframe}
+    </div>
+
+    <div style="margin-top:15px; font-size:13px; opacity:0.6;">
+      Drag this bubble to the edge to release it.
     </div>
   `;
 
   bubbleContainer.appendChild(bubble);
 
-  // Animate pop-in
+  // Pop-in animation
   setTimeout(() => {
     bubble.style.transition = "all 0.4s ease";
     bubble.style.transform = "translate(-50%, -50%) scale(1)";
   }, 50);
 
-  // Reset option
+  // ===== Drag-to-Release Logic =====
+  let isDragging = false;
+  let offsetX, offsetY;
+
+  bubble.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    bubble.style.transition = "none";
+    bubble.style.cursor = "grabbing";
+
+    const rect = bubble.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+  });
+
+  document.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
+
+    bubble.style.left = e.clientX - offsetX + "px";
+    bubble.style.top = e.clientY - offsetY + "px";
+    bubble.style.transform = "scale(1)";
+  });
+
+  document.addEventListener("mouseup", () => {
+    if (!isDragging) return;
+    isDragging = false;
+    bubble.style.cursor = "grab";
+
+    const rect = bubble.getBoundingClientRect();
+
+    const nearEdge =
+      rect.left < 60 ||
+      rect.right > window.innerWidth - 60 ||
+      rect.top < 60 ||
+      rect.bottom > window.innerHeight - 60;
+
+    if (nearEdge) {
+     const rect = bubble.getBoundingClientRect();
+     const centerX = rect.left + rect.width / 2;
+     const centerY = rect.top + rect.height / 2;
+
+// Create scatter burst
+    createScatterEffect(centerX, centerY);
+
+// Hide main bubble
+     bubble.style.transition = "all 0.2s ease";
+     bubble.style.opacity = "0";
+     bubble.style.transform = "scale(0.2)";
+
+      setTimeout(() => {
+        stateHistory = [];
+        currentState = "root";
+        document.body.classList.remove("calm-mode");
+        renderState("root");
+      }, 600);
+    } else {
+      bubble.style.transition = "all 0.3s ease";
+      bubble.style.left = "50%";
+      bubble.style.top = "50%";
+      bubble.style.transform = "translate(-50%, -50%) scale(1)";
+    }
+  });
+
+  // Restart Button
   const restart = document.createElement("div");
   restart.innerText = "Start again";
-  restart.style.position = "absolute";
-  restart.style.bottom = "40px";
-  restart.style.left = "50%";
-  restart.style.transform = "translateX(-50%)";
-  restart.style.opacity = "0.5";
-  restart.style.cursor = "pointer";
+  restart.classList.add("restart-button");
 
   restart.addEventListener("click", () => {
     stateHistory = [];
     currentState = "root";
+    document.body.classList.remove("calm-mode");
     renderState("root");
   });
 
   bubbleContainer.appendChild(restart);
 }
+
+
 
 renderState("root");

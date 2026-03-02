@@ -8,21 +8,56 @@
 body {
   height: 100vh;
   overflow: hidden;
-  background: radial-gradient(
-      circle at 20% 20%,
-      rgba(255, 255, 255, 0.05),
-      transparent 40%
-    ),
-    radial-gradient(
-      circle at 80% 80%,
-      rgba(255, 255, 255, 0.05),
-      transparent 40%
-    ),
-    linear-gradient(135deg, #0f172a, #1e293b);
+  position: relative;
+  background: linear-gradient(140deg, #1f2937, #111827);
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
+  color: #e5e7eb;
+  transition: background 0.6s ease;
+}
+
+/* ===== Ambient Gradient Layers ===== */
+
+body::before,
+body::after {
+  content: "";
+  position: absolute;
+  width: 800px;
+  height: 800px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+body::before {
+  background: #3b82f6;
+  top: -250px;
+  left: -250px;
+  animation: ambientMove1 20s ease-in-out infinite alternate;
+}
+
+body::after {
+  background: #6366f1;
+  bottom: -300px;
+  right: -250px;
+  animation: ambientMove2 25s ease-in-out infinite alternate;
+}
+
+@keyframes ambientMove1 {
+  0% { transform: translate(0,0); }
+  100% { transform: translate(200px,150px); }
+}
+
+@keyframes ambientMove2 {
+  0% { transform: translate(0,0); }
+  100% { transform: translate(-200px,-150px); }
+}
+
+@keyframes floatBg {
+  0% { transform: translate(0,0); }
+  100% { transform: translate(250px,180px); }
 }
 
 #app {
@@ -45,7 +80,7 @@ body {
   padding: 18px 28px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
   border-radius: 40px;
   font-size: 15px;
   font-weight: 500;
@@ -53,14 +88,111 @@ body {
   cursor: pointer;
   user-select: none;
   transition: all 0.3s ease;
+  animation: float 6s ease-in-out infinite;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
 }
 
 .bubble:hover {
-  transform: translateY(-3px);
-  background: rgba(255, 255, 255, 0.12);
+  transform: translate(-50%, -50%) translateY(-6px) scale(1.03);
+  background: rgba(255, 255, 255, 0.14);
   border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .bubble:active {
-  transform: scale(0.96);
+  transform: translate(-50%, -50%) scale(0.96);
+}
+
+/* ===== Gentle Floating Motion ===== */
+
+@keyframes float {
+  0% { transform: translate(-50%, -50%) translateY(0px); }
+  50% { transform: translate(-50%, -50%) translateY(-8px); }
+  100% { transform: translate(-50%, -50%) translateY(0px); }
+}
+
+/* ===== Progress & Back Styling ===== */
+
+.progress-indicator {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.6;
+  font-size: 14px;
+}
+
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.back-button:hover {
+  opacity: 0.8;
+}
+
+/* ===== Restart Button ===== */
+
+.restart-button {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.restart-button:hover {
+  opacity: 0.9;
+}
+
+/* ===== Calm Mode Background ===== */
+
+body.calm-mode {
+  background: linear-gradient(135deg, #1e3a5f, #0f2027);
+}
+
+/* ===== Breathing Circle ===== */
+
+.breathing-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 20px auto 10px auto;
+  background: rgba(255,255,255,0.15);
+  box-shadow: 0 0 25px rgba(255,255,255,0.2);
+  animation: breathe 4s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+/* ===== Scatter Effect ===== */
+
+.scatter-piece {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.6);
+  pointer-events: none;
+  animation: scatter 600ms ease-out forwards;
+}
+
+@keyframes scatter {
+  0% {
+    opacity: 1;
+    transform: translate(0,0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--x), var(--y)) scale(0.3);
+  }
 }
