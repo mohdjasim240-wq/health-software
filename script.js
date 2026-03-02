@@ -1,3 +1,4 @@
+console.log("JS loaded");
 const bubbleContainer = document.getElementById("bubble-container");
 
 const emotionTree = {
@@ -141,4 +142,4 @@ function showFinalInsight(data) {
   bubbleContainer.appendChild(bubble);
 }
 
-renderState(cuirrentState);
+renderState(currentState);
