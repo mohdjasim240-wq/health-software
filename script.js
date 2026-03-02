@@ -477,23 +477,206 @@ function startBubblePopGame() {
   }
 }
 
-function showFinalInsight(data) {
+function startTapBreathingGame() {
   bubbleContainer.innerHTML = "";
 
+  let taps = 0;
+
+  const circle = document.createElement("div");
+  circle.classList.add("breathing-circle");
+  circle.style.cursor = "pointer";
+  circle.style.position = "absolute";
+  circle.style.left = "50%";
+  circle.style.top = "50%";
+  circle.style.transform = "translate(-50%, -50%)";
+
+  circle.addEventListener("click", () => {
+    taps++;
+    circle.style.transform = "translate(-50%, -50%) scale(1.3)";
+    setTimeout(() => {
+      circle.style.transform = "translate(-50%, -50%) scale(1)";
+    }, 150);
+
+    if (taps >= 4) {
+      setTimeout(() => {
+        resetToRoot();
+      }, 400);
+    }
+  });
+
+  bubbleContainer.appendChild(circle);
+}
+
+/* ===========================
+   FRUSTRATION RELEASE FLOW
+=========================== */
+
+function startFrustrationRelease() {
+  bubbleContainer.innerHTML = "";
+
+  const canvas = document.createElement("canvas");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  canvas.style.position = "absolute";
+  canvas.style.top = "0";
+  canvas.style.left = "0";
+
+  bubbleContainer.appendChild(canvas);
+
+  const ctx = canvas.getContext("2d");
+  ctx.lineWidth = 4;
+  ctx.lineCap = "round";
+  ctx.strokeStyle = "rgba(0,0,0,0.6)";
+
+  let drawing = false;
+
+  canvas.addEventListener("mousedown", () => drawing = true);
+  canvas.addEventListener("mouseup", () => drawing = false);
+  canvas.addEventListener("mousemove", (e) => {
+    if (!drawing) return;
+    ctx.lineTo(e.clientX, e.clientY);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(e.clientX, e.clientY);
+  });
+
+  const doneBtn = document.createElement("button");
+  doneBtn.innerText = "Done";
+  doneBtn.style.position = "absolute";
+  doneBtn.style.bottom = "40px";
+  doneBtn.style.left = "50%";
+  doneBtn.style.transform = "translateX(-50%)";
+  doneBtn.style.padding = "10px 20px";
+  doneBtn.style.borderRadius = "20px";
+  doneBtn.style.border = "none";
+  doneBtn.style.background = "#111";
+  doneBtn.style.color = "white";
+  doneBtn.style.cursor = "pointer";
+
+  doneBtn.onclick = () => askIfReleased(1);
+
+  bubbleContainer.appendChild(doneBtn);
+}
+
+function askIfReleased(stage) {
+  bubbleContainer.innerHTML = "";
+
+  const question = document.createElement("div");
+  question.style.position = "absolute";
+  question.style.top = "40%";
+  question.style.left = "50%";
+  question.style.transform = "translate(-50%, -50%)";
+  question.style.fontSize = "18px";
+  question.innerText = "Did your frustration reduce?";
+
+  const yes = document.createElement("button");
+  yes.innerText = "Yes";
+  yes.style.margin = "20px";
+  yes.onclick = resetToRoot;
+
+  const no = document.createElement("button");
+  no.innerText = "No";
+  no.style.margin = "20px";
+
+  no.onclick = () => {
+    if (stage === 1) {
+      startBubblePopGameWithReturn();
+    } else {
+      startGravityWellGame();
+    }
+  };
+
+  bubbleContainer.appendChild(question);
+  bubbleContainer.appendChild(yes);
+  bubbleContainer.appendChild(no);
+}
+
+function startBubblePopGameWithReturn() {
+  bubbleContainer.innerHTML = "";
+  let remaining = 6;
+
+  for (let i = 0; i < 6; i++) {
+    const mini = document.createElement("div");
+    mini.classList.add("mini-bubble");
+
+    mini.style.left = Math.random() * (window.innerWidth - 60) + "px";
+    mini.style.top = Math.random() * (window.innerHeight - 60) + "px";
+
+    mini.addEventListener("click", () => {
+      mini.classList.add("pop-animation");
+      setTimeout(() => mini.remove(), 200);
+      remaining--;
+      if (remaining === 0) setTimeout(() => askIfReleased(2), 400);
+    });
+
+    bubbleContainer.appendChild(mini);
+  }
+}
+
+function startGravityWellGame() {
+  bubbleContainer.innerHTML = "";
+
+  const well = document.createElement("div");
+  well.style.position = "absolute";
+  well.style.width = "120px";
+  well.style.height = "120px";
+  well.style.borderRadius = "50%";
+  well.style.background = "radial-gradient(circle, #000 20%, #444)";
+  well.style.left = "50%";
+  well.style.top = "50%";
+  well.style.transform = "translate(-50%, -50%)";
+
+  bubbleContainer.appendChild(well);
+
+  for (let i = 0; i < 8; i++) {
+    const orb = document.createElement("div");
+    orb.classList.add("mini-bubble");
+
+    orb.style.left = Math.random() * window.innerWidth + "px";
+    orb.style.top = Math.random() * window.innerHeight + "px";
+
+    bubbleContainer.appendChild(orb);
+
+    const interval = setInterval(() => {
+      const rect = orb.getBoundingClientRect();
+      const dx = window.innerWidth / 2 - rect.left;
+      const dy = window.innerHeight / 2 - rect.top;
+
+      orb.style.left = rect.left + dx * 0.02 + "px";
+      orb.style.top = rect.top + dy * 0.02 + "px";
+
+      if (Math.abs(dx) < 5 && Math.abs(dy) < 5) {
+        orb.remove();
+        clearInterval(interval);
+      }
+    }, 30);
+  }
+
+  setTimeout(resetToRoot, 5000);
+}
+
+function resetToRoot() {
+  stateHistory = [];
+  currentState = "root";
+  document.body.classList.remove("calm-mode");
+  renderState("root");
+}
+
+
+
+function showFinalInsight(data) {
+  bubbleContainer.innerHTML = "";
   document.body.classList.add("calm-mode");
 
   const bubble = document.createElement("div");
   bubble.classList.add("bubble");
 
-  bubble.style.background = "rgba(255,255,255,0.12)";
-  bubble.style.border = "1px solid rgba(255,255,255,0.25)";
   bubble.style.left = "50%";
   bubble.style.top = "50%";
-  bubble.style.transform = "translate(-50%, -50%) scale(0.8)";
-  bubble.style.maxWidth = "500px";
+  bubble.style.transform = "translate(-50%, -50%) scale(0.9)";
+  bubble.style.maxWidth = "520px";
   bubble.style.textAlign = "center";
   bubble.style.padding = "30px";
-  bubble.style.animation = "none";
   bubble.style.cursor = "grab";
 
   bubble.innerHTML = `
@@ -516,91 +699,125 @@ function showFinalInsight(data) {
     </div>
   `;
 
+  /* ===========================
+     RELEASE OPTIONS
+  =========================== */
+
+  const controls = document.createElement("div");
+  controls.style.marginTop = "18px";
+
+  controls.innerHTML = `
+    <button id="popGameBtn" style="
+      padding:8px 14px;
+      border-radius:20px;
+      border:1px solid rgba(0,0,0,0.1);
+      background:white;
+      cursor:pointer;
+      margin:4px;
+    ">Pop bubbles</button>
+
+    <button id="tapGameBtn" style="
+      padding:8px 14px;
+      border-radius:20px;
+      border:1px solid rgba(0,0,0,0.1);
+      background:white;
+      cursor:pointer;
+      margin:4px;
+    ">Tap to breathe</button>
+
+    <button id="traceBtn" style="
+      padding:8px 14px;
+      border-radius:20px;
+      border:1px solid rgba(0,0,0,0.1);
+      background:white;
+      cursor:pointer;
+      margin:4px;
+    ">Trace my frustration</button>
+  `;
+
+  bubble.appendChild(controls);
   bubbleContainer.appendChild(bubble);
 
-  // Pop-in animation
+  // Attach button logic safely
   setTimeout(() => {
-    bubble.style.transition = "all 0.4s ease";
-    bubble.style.transform = "translate(-50%, -50%) scale(1)";
+    document.getElementById("popGameBtn").onclick = startBubblePopGame;
+    document.getElementById("tapGameBtn").onclick = startTapBreathingGame;
+    document.getElementById("traceBtn").onclick = startFrustrationRelease;
   }, 50);
 
-  // ===== Drag-to-Release Logic =====
+  /* ===========================
+     DRAG TO EDGE (SAFE VERSION)
+  =========================== */
+
   let isDragging = false;
-  let offsetX, offsetY;
+  let offsetX = 0;
+  let offsetY = 0;
 
   bubble.addEventListener("mousedown", (e) => {
     isDragging = true;
-    bubble.style.transition = "none";
-    bubble.style.cursor = "grabbing";
 
     const rect = bubble.getBoundingClientRect();
     offsetX = e.clientX - rect.left;
     offsetY = e.clientY - rect.top;
-  });
 
-  document.addEventListener("mousemove", (e) => {
-    if (!isDragging) return;
-
-    bubble.style.left = e.clientX - offsetX + "px";
-    bubble.style.top = e.clientY - offsetY + "px";
-    bubble.style.transform = "scale(1)";
-  });
-
-  document.addEventListener("mouseup", () => {
-    if (!isDragging) return;
-    isDragging = false;
-    bubble.style.cursor = "grab";
-
-    const rect = bubble.getBoundingClientRect();
-
-    const nearEdge =
-      rect.left < 60 ||
-      rect.right > window.innerWidth - 60 ||
-      rect.top < 60 ||
-      rect.bottom > window.innerHeight - 60;
-
-    if (nearEdge) {
-     const rect = bubble.getBoundingClientRect();
-     const centerX = rect.left + rect.width / 2;
-     const centerY = rect.top + rect.height / 2;
-
-// Create scatter burst
-    createScatterEffect(centerX, centerY);
-
-// Hide main bubble
-     bubble.style.transition = "all 0.2s ease";
-     bubble.style.opacity = "0";
-     bubble.style.transform = "scale(0.2)";
-
-      setTimeout(() => {
-        stateHistory = [];
-        currentState = "root";
-        document.body.classList.remove("calm-mode");
-        renderState("root");
-      }, 600);
-    } else {
-      bubble.style.transition = "all 0.3s ease";
-      bubble.style.left = "50%";
-      bubble.style.top = "50%";
-      bubble.style.transform = "translate(-50%, -50%) scale(1)";
+    function handleMove(e) {
+      if (!isDragging) return;
+      bubble.style.left = e.clientX - offsetX + "px";
+      bubble.style.top = e.clientY - offsetY + "px";
+      bubble.style.transform = "none";
     }
+
+    function handleUp() {
+      if (!isDragging) return;
+      isDragging = false;
+
+      const rect = bubble.getBoundingClientRect();
+      const nearEdge =
+        rect.left < 60 ||
+        rect.right > window.innerWidth - 60 ||
+        rect.top < 60 ||
+        rect.bottom > window.innerHeight - 60;
+
+      if (nearEdge) {
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        createScatterEffect(centerX, centerY);
+        bubble.remove();
+
+        setTimeout(() => {
+          resetToRoot();
+        }, 600);
+      } else {
+        bubble.style.left = "50%";
+        bubble.style.top = "50%";
+        bubble.style.transform = "translate(-50%, -50%)";
+      }
+
+      document.removeEventListener("mousemove", handleMove);
+      document.removeEventListener("mouseup", handleUp);
+    }
+
+    document.addEventListener("mousemove", handleMove);
+    document.addEventListener("mouseup", handleUp);
   });
 
-  // Restart Button
+  /* ===========================
+     RESTART OPTION
+  =========================== */
+
   const restart = document.createElement("div");
   restart.innerText = "Start again";
-  restart.classList.add("restart-button");
+  restart.style.position = "absolute";
+  restart.style.bottom = "40px";
+  restart.style.left = "50%";
+  restart.style.transform = "translateX(-50%)";
+  restart.style.opacity = "0.5";
+  restart.style.cursor = "pointer";
 
-  restart.addEventListener("click", () => {
-    stateHistory = [];
-    currentState = "root";
-    document.body.classList.remove("calm-mode");
-    renderState("root");
-  });
+  restart.onclick = resetToRoot;
 
   bubbleContainer.appendChild(restart);
 }
-
-
 
 renderState("root");
