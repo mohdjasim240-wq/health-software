@@ -650,6 +650,8 @@ function startGravityWellGame() {
 
   bubbleContainer.appendChild(well);
 
+  let remaining = 8;
+
   for (let i = 0; i < 8; i++) {
     const orb = document.createElement("div");
     orb.classList.add("mini-bubble");
@@ -670,11 +672,16 @@ function startGravityWellGame() {
       if (Math.abs(dx) < 5 && Math.abs(dy) < 5) {
         orb.remove();
         clearInterval(interval);
+        remaining--;
+
+        if (remaining === 0) {
+          setTimeout(() => {
+            askIfReleased(3);   // 🔥 THIS is the fix
+          }, 500);
+        }
       }
     }, 30);
   }
-
-  setTimeout(resetToRoot, 5000);
 }
 
 function startFocusHoldGame() {
