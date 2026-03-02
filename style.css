@@ -216,3 +216,47 @@ body.calm-mode {
   opacity: 0;
   transform: scale(0.2);
 }
+
+.app-header {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  opacity: 0.85;
+}
+
+.app-header h1 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+.app-header p {
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+.home-card {
+  padding: 18px;
+  margin: 14px 0;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-weight: 500;
+}
+
+.home-card span {
+  display: block;
+  font-size: 12px;
+  opacity: 0.6;
+  margin-top: 6px;
+}
+
+.home-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}

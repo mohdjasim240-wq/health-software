@@ -347,7 +347,10 @@ function renderState(state) {
   const options = emotionTree[state];
   if (!options) return;
 
-  // ===== ROOT SPECIAL CASE =====
+  /* ===========================
+     ROOT SPECIAL CASE
+  =========================== */
+
   if (state === "root") {
     const bubble = document.createElement("div");
     bubble.classList.add("bubble");
@@ -359,10 +362,26 @@ function renderState(state) {
     bubble.addEventListener("click", () => handleBubbleClick(options[0]));
 
     bubbleContainer.appendChild(bubble);
+
+    // Home exit button
+    const exit = document.createElement("div");
+    exit.innerText = "← Home";
+    exit.style.position = "absolute";
+    exit.style.top = "20px";
+    exit.style.left = "20px";
+    exit.style.opacity = "0.6";
+    exit.style.cursor = "pointer";
+    exit.onclick = showHomeScreen;
+
+    bubbleContainer.appendChild(exit);
+
     return;
   }
 
-  // ===== Progress Indicator =====
+  /* ===========================
+     PROGRESS INDICATOR
+  =========================== */
+
   const progress = document.createElement("div");
   progress.style.position = "absolute";
   progress.style.top = "20px";
@@ -370,27 +389,38 @@ function renderState(state) {
   progress.style.transform = "translateX(-50%)";
   progress.style.opacity = "0.5";
   progress.style.fontSize = "14px";
-  progress.innerText = `Step ${stateHistory.length + 1} of 6`;
+  progress.innerText = `Step ${stateHistory.length + 1}`;
   bubbleContainer.appendChild(progress);
 
-  if (stateHistory.length > 0) {
+  /* ===========================
+     BACK / HOME BUTTON
+  =========================== */
+
   const back = document.createElement("div");
-  back.innerText = "← Back";
   back.style.position = "absolute";
   back.style.top = "20px";
   back.style.left = "20px";
-  back.style.opacity = "0.5";
+  back.style.opacity = "0.6";
   back.style.cursor = "pointer";
+  back.style.fontSize = "14px";
 
-  back.addEventListener("click", () => {
-    currentState = stateHistory.pop();
-    renderState(currentState);
-  });
+  if (stateHistory.length > 0) {
+    back.innerText = "← Back";
+    back.onclick = () => {
+      currentState = stateHistory.pop();
+      renderState(currentState);
+    };
+  } else {
+    back.innerText = "← Home";
+    back.onclick = showHomeScreen;
+  }
 
   bubbleContainer.appendChild(back);
-}
 
-  // ===== Render Options Evenly =====
+  /* ===========================
+     RENDER OPTIONS
+  =========================== */
+
   if (Array.isArray(options)) {
     const total = options.length;
 
@@ -479,6 +509,16 @@ function startBubblePopGame() {
 
 function startTapBreathingGame() {
   bubbleContainer.innerHTML = "";
+  const instruction = document.createElement("div");
+instruction.innerText = "Tap slowly 4 times. Breathe in and out with each tap.";
+instruction.style.position = "absolute";
+instruction.style.top = "30px";
+instruction.style.left = "50%";
+instruction.style.transform = "translateX(-50%)";
+instruction.style.fontSize = "16px";
+instruction.style.opacity = "0.7";
+
+bubbleContainer.appendChild(instruction);
 
   let taps = 0;
 
@@ -513,6 +553,16 @@ function startTapBreathingGame() {
 
 function startFrustrationRelease() {
   bubbleContainer.innerHTML = "";
+  const instruction = document.createElement("div");
+instruction.innerText = "Scribble freely on the screen. Release your frustration physically.";
+instruction.style.position = "absolute";
+instruction.style.top = "30px";
+instruction.style.left = "50%";
+instruction.style.transform = "translateX(-50%)";
+instruction.style.fontSize = "16px";
+instruction.style.opacity = "0.7";
+
+bubbleContainer.appendChild(instruction);
 
   const canvas = document.createElement("canvas");
   canvas.width = window.innerWidth;
@@ -584,14 +634,8 @@ function askIfReleased(stage) {
   styleCalmButton(no);
 
   no.onclick = () => {
-    if (stage === 1) {
-      startBubblePopGameWithReturn();
-    } else if (stage === 2) {
-      startGravityWellGame();
-    } else {
-      startFocusHoldGame(); // new game
-    }
-  };
+  startRandomGame();
+};
 
   container.appendChild(question);
   container.appendChild(yes);
@@ -615,6 +659,16 @@ function styleCalmButton(btn) {
 
 function startBubblePopGameWithReturn() {
   bubbleContainer.innerHTML = "";
+  const instruction = document.createElement("div");
+  instruction.innerText = "Pop all the bubbles to release your stress.";
+  instruction.style.position = "absolute";
+  instruction.style.top = "30px";
+  instruction.style.left = "50%";
+  instruction.style.transform = "translateX(-50%)";
+  instruction.style.fontSize = "16px";
+  instruction.style.opacity = "0.7";
+
+  bubbleContainer.appendChild(instruction);
   let remaining = 6;
 
   for (let i = 0; i < 6; i++) {
@@ -637,6 +691,17 @@ function startBubblePopGameWithReturn() {
 
 function startGravityWellGame() {
   bubbleContainer.innerHTML = "";
+  const instruction = document.createElement("div");
+  instruction.innerText = "Watch the scattered thoughts return to the center.";
+  instruction.style.position = "absolute";
+  instruction.style.top = "30px";
+  instruction.style.left = "50%";
+  instruction.style.transform = "translateX(-50%)";
+  instruction.style.fontSize = "16px";
+  instruction.style.fontWeight = "500";
+  instruction.style.opacity = "0.7";
+
+bubbleContainer.appendChild(instruction);
 
   const well = document.createElement("div");
   well.style.position = "absolute";
@@ -686,6 +751,16 @@ function startGravityWellGame() {
 
 function startFocusHoldGame() {
   bubbleContainer.innerHTML = "";
+  const instruction = document.createElement("div");
+  instruction.innerText = "Press and hold the circle for 3 seconds without releasing.";
+  instruction.style.position = "absolute";
+  instruction.style.top = "30px";
+  instruction.style.left = "50%";
+  instruction.style.transform = "translateX(-50%)";
+  instruction.style.fontSize = "16px";
+  instruction.style.opacity = "0.7";
+
+  bubbleContainer.appendChild(instruction);
 
   const circle = document.createElement("div");
   circle.style.position = "absolute";
@@ -729,6 +804,27 @@ function startFocusHoldGame() {
   });
 }
 
+/* ===========================
+   RANDOM RELEASE ENGINE
+=========================== */
+
+/* ===========================
+   RANDOM RELEASE ENGINE
+=========================== */
+
+const releaseGames = [
+  startBubblePopGameWithReturn,
+  startGravityWellGame,
+  startFocusHoldGame,
+  startTapBreathingGame,
+  startFrustrationRelease
+];
+
+function startRandomGame() {
+  const randomIndex = Math.floor(Math.random() * releaseGames.length);
+  releaseGames[randomIndex]();
+}
+
 function resetToRoot() {
   stateHistory = [];
   currentState = "root";
@@ -753,25 +849,25 @@ function showFinalInsight(data) {
   bubble.style.padding = "30px";
   bubble.style.cursor = "grab";
 
-  bubble.innerHTML = `
-    <div style="font-size:18px; margin-bottom:12px;">
-      ${data.insight}
-    </div>
+bubble.innerHTML = `
+  <div style="font-size:20px; font-weight:600; margin-bottom:18px;">
+    ${data.insight}
+  </div>
 
-    <div class="breathing-circle"></div>
+  <div style="opacity:0.7; margin-bottom:20px; line-height:1.6;">
+    ${data.deeper}
+  </div>
 
-    <div style="opacity:0.8; margin-bottom:15px;">
-      ${data.deeper}
-    </div>
-
-    <div style="font-weight:600;">
-      ${data.reframe}
-    </div>
-
-    <div style="margin-top:15px; font-size:13px; opacity:0.6;">
-      Drag this bubble to the edge to release it.
-    </div>
-  `;
+  <div style="
+    padding:14px;
+    border-radius:12px;
+    background:rgba(0,0,0,0.04);
+    font-weight:500;
+    margin-bottom:20px;
+  ">
+    ${data.reframe}
+  </div>
+`;
 
   /* ===========================
      RELEASE OPTIONS
@@ -808,6 +904,14 @@ function showFinalInsight(data) {
       margin:4px;
     ">Trace my frustration</button>
   `;
+
+  const releaseTitle = document.createElement("div");
+  releaseTitle.innerText = "Choose a regulation method";
+  releaseTitle.style.marginTop = "18px";
+  releaseTitle.style.fontSize = "13px";
+  releaseTitle.style.opacity = "0.6";
+
+  bubble.appendChild(releaseTitle);
 
   bubble.appendChild(controls);
   bubbleContainer.appendChild(bubble);
@@ -876,6 +980,7 @@ function showFinalInsight(data) {
     document.addEventListener("mouseup", handleUp);
   });
 
+  
   /* ===========================
      RESTART OPTION
   =========================== */
@@ -894,4 +999,105 @@ function showFinalInsight(data) {
   bubbleContainer.appendChild(restart);
 }
 
-renderState("root");
+function startQuickReliefMode() {
+  startRandomGame();
+}
+
+function showHomeScreen() {
+  bubbleContainer.innerHTML = "";
+
+  const container = document.createElement("div");
+  container.style.position = "absolute";
+  container.style.top = "50%";
+  container.style.left = "50%";
+  container.style.transform = "translate(-50%, -50%)";
+  container.style.textAlign = "center";
+  container.style.width = "420px";
+
+  function createCard(title, subtitle, onClick) {
+    const card = document.createElement("div");
+
+    card.style.background = "#f5f5f7";
+    card.style.padding = "22px";
+    card.style.margin = "18px 0";
+    card.style.borderRadius = "16px";
+    card.style.cursor = "pointer";
+    card.style.boxShadow = "0 4px 12px rgba(0,0,0,0.06)";
+    card.style.transition = "all 0.2s ease";
+    card.style.border = "1px solid rgba(0,0,0,0.05)";
+    card.style.color = "#111";
+
+    card.innerHTML = `
+      <div style="font-size:18px; font-weight:600; margin-bottom:6px;">
+        ${title}
+      </div>
+      <div style="font-size:13px; opacity:0.6;">
+        ${subtitle}
+      </div>
+    `;
+
+    card.onmouseover = () => {
+      card.style.transform = "translateY(-4px)";
+      card.style.boxShadow = "0 8px 20px rgba(0,0,0,0.08)";
+    };
+
+    card.onmouseleave = () => {
+      card.style.transform = "translateY(0)";
+      card.style.boxShadow = "0 4px 12px rgba(0,0,0,0.06)";
+    };
+
+    card.onclick = onClick;
+
+    return card;
+  }
+
+  container.appendChild(
+    createCard(
+      "I feel overwhelmed",
+      "Guided emotional breakdown",
+      startGuidedPath
+    )
+  );
+
+  container.appendChild(
+    createCard(
+      "I just want relief",
+      "Instant stress regulation",
+      startQuickReliefMode
+    )
+  );
+
+  container.appendChild(
+    createCard(
+      "I want a calming activity",
+      "Interactive reset",
+      startPlayMode
+    )
+  );
+
+  bubbleContainer.appendChild(container);
+}
+
+function startGuidedPath() {
+  currentState = "root";
+  renderState("root");
+}
+
+function startCognitiveMode() {
+  currentState = "Throw the stress away.";
+  renderState(currentState);
+}
+
+function startQuickRelief() {
+  startBubblePopGame();
+}
+
+function startPlayMode() {
+  startFocusHoldGame();
+}
+
+function startQuickReliefMode() {
+  startRandomGame();
+}
+
+showHomeScreen();
