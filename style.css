@@ -1,0 +1,65 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(
+      circle at 20% 20%,
+      rgba(255, 255, 255, 0.05),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(255, 255, 255, 0.05),
+      transparent 40%
+    ),
+    linear-gradient(135deg, #0f172a, #1e293b);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+#bubble-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* ===== Bubble Styling ===== */
+
+.bubble {
+  position: absolute;
+  padding: 18px 28px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  border-radius: 40px;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s ease;
+}
+
+.bubble:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.bubble:active {
+  transform: scale(0.96);
+}
