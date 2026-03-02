@@ -561,34 +561,56 @@ function startFrustrationRelease() {
 function askIfReleased(stage) {
   bubbleContainer.innerHTML = "";
 
+  const container = document.createElement("div");
+  container.style.position = "absolute";
+  container.style.top = "50%";
+  container.style.left = "50%";
+  container.style.transform = "translate(-50%, -50%)";
+  container.style.textAlign = "center";
+
   const question = document.createElement("div");
-  question.style.position = "absolute";
-  question.style.top = "40%";
-  question.style.left = "50%";
-  question.style.transform = "translate(-50%, -50%)";
-  question.style.fontSize = "18px";
-  question.innerText = "Did your frustration reduce?";
+  question.innerText = "Are you feeling calmer now?";
+  question.style.fontSize = "20px";
+  question.style.marginBottom = "25px";
+  question.style.fontWeight = "500";
 
   const yes = document.createElement("button");
-  yes.innerText = "Yes";
-  yes.style.margin = "20px";
+  yes.innerText = "Yes, I am calmer";
+  styleCalmButton(yes);
   yes.onclick = resetToRoot;
 
   const no = document.createElement("button");
-  no.innerText = "No";
-  no.style.margin = "20px";
+  no.innerText = "Not yet";
+  styleCalmButton(no);
 
   no.onclick = () => {
     if (stage === 1) {
       startBubblePopGameWithReturn();
-    } else {
+    } else if (stage === 2) {
       startGravityWellGame();
+    } else {
+      startFocusHoldGame(); // new game
     }
   };
 
-  bubbleContainer.appendChild(question);
-  bubbleContainer.appendChild(yes);
-  bubbleContainer.appendChild(no);
+  container.appendChild(question);
+  container.appendChild(yes);
+  container.appendChild(no);
+
+  bubbleContainer.appendChild(container);
+}
+
+function styleCalmButton(btn) {
+  btn.style.display = "block";
+  btn.style.margin = "12px auto";
+  btn.style.padding = "10px 22px";
+  btn.style.borderRadius = "25px";
+  btn.style.border = "1px solid rgba(0,0,0,0.1)";
+  btn.style.background = "white";
+  btn.style.cursor = "pointer";
+  btn.style.transition = "0.2s ease";
+  btn.onmouseover = () => btn.style.transform = "scale(1.05)";
+  btn.onmouseleave = () => btn.style.transform = "scale(1)";
 }
 
 function startBubblePopGameWithReturn() {
@@ -653,6 +675,51 @@ function startGravityWellGame() {
   }
 
   setTimeout(resetToRoot, 5000);
+}
+
+function startFocusHoldGame() {
+  bubbleContainer.innerHTML = "";
+
+  const circle = document.createElement("div");
+  circle.style.position = "absolute";
+  circle.style.width = "120px";
+  circle.style.height = "120px";
+  circle.style.borderRadius = "50%";
+  circle.style.background = "linear-gradient(135deg,#4f46e5,#6366f1)";
+  circle.style.left = "50%";
+  circle.style.top = "50%";
+  circle.style.transform = "translate(-50%, -50%)";
+  circle.style.cursor = "pointer";
+
+  bubbleContainer.appendChild(circle);
+
+  let holdTime = 0;
+  let holding = false;
+
+  circle.addEventListener("mousedown", () => {
+    holding = true;
+
+    const interval = setInterval(() => {
+      if (!holding) {
+        clearInterval(interval);
+        return;
+      }
+
+      holdTime += 100;
+      circle.style.transform = `translate(-50%, -50%) scale(${1 + holdTime / 3000})`;
+
+      if (holdTime >= 3000) {
+        clearInterval(interval);
+        askIfReleased(3);
+      }
+    }, 100);
+  });
+
+  circle.addEventListener("mouseup", () => {
+    holding = false;
+    holdTime = 0;
+    circle.style.transform = "translate(-50%, -50%) scale(1)";
+  });
 }
 
 function resetToRoot() {
