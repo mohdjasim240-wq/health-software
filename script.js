@@ -2,88 +2,205 @@ console.log("JS loaded");
 const bubbleContainer = document.getElementById("bubble-container");
 
 const emotionTree = {
-  root: [
-    "Big moment coming up?",
-    "Feeling behind everyone?",
-    "Can’t switch your brain off?"
+  root: ["Throw the stress away."],
+
+  // LEVEL 1 → LEVEL 2
+
+  "Throw the stress away.": [
+    "It’s about something important.",
+    "It’s about how I see myself."
   ],
 
-  // ===== PERFORMANCE PATH =====
+  // ================= PATH A =================
+  // IMPORTANT EVENT
 
-  "Big moment coming up?": [
-    "Scared I’ll blank out?",
-    "Too many expectations?",
-    "What if I mess it up?"
+  "It’s about something important.": [
+    "An upcoming performance.",
+    "Someone’s expectations.",
+    "A conversation I’m nervous about."
   ],
 
-  "Scared I’ll blank out?": [
-    "Mind going empty?",
-    "Heart racing?",
-    "Forgetting everything I studied?"
+  // --- Performance Branch
+
+  "An upcoming performance.": [
+    "I might freeze.",
+    "I might embarrass myself.",
+    "I might not perform perfectly."
   ],
 
-  "Mind going empty?": [
-    "Looking incapable?",
-    "Letting someone down?"
+  "I might freeze.": [
+    "They’ll judge me.",
+    "It proves I’m incapable."
   ],
 
-  "Looking incapable?": {
+  "They’ll judge me.": {
     final: true,
-    insight: "You’re not afraid of failing.",
-    deeper: "You’re afraid of being judged.",
-    reframe: "Judgment lasts minutes. Growth lasts years."
+    insight: "Fear of judgment amplifies mistakes.",
+    deeper: "But most people are preoccupied with themselves.",
+    reframe: "Perception is louder in your mind than in reality."
   },
 
-  // ===== COMPARISON PATH =====
-
-  "Feeling behind everyone?": [
-    "Everyone seems ahead?",
-    "Scrolling makes it worse?",
-    "Comparing nonstop?"
-  ],
-
-  "Everyone seems ahead?": [
-    "Career-wise?",
-    "Life-wise?",
-    "Financially?"
-  ],
-
-  "Career-wise?": [
-    "Am I too late?",
-    "Did I choose wrong?"
-  ],
-
-  "Am I too late?": {
+  "It proves I’m incapable.": {
     final: true,
-    insight: "You’re not late.",
-    deeper: "You’re just measuring yourself with someone else’s clock.",
-    reframe: "Different timelines. Same potential."
+    insight: "Capability isn’t measured in one moment.",
+    deeper: "Stress interrupts flow, not intelligence.",
+    reframe: "One pause does not erase your preparation."
   },
 
-  // ===== OVERTHINKING PATH =====
-
-  "Can’t switch your brain off?": [
-    "Replay mode activated?",
-    "What-if scenarios?",
-    "Overanalyzing one sentence?"
+  "I might embarrass myself.": [
+    "People will remember it.",
+    "It will define me."
   ],
 
-  "Replay mode activated?": [
-    "That awkward moment?",
-    "Something I said?",
-    "Something they said?"
-  ],
-
-  "That awkward moment?": [
-    "Did I look stupid?",
-    "Do they think differently of me now?"
-  ],
-
-  "Did I look stupid?": {
+  "People will remember it.": {
     final: true,
-    insight: "Most people forgot that moment.",
-    deeper: "Your brain just didn’t.",
-    reframe: "Embarrassment fades. Memory exaggerates."
+    insight: "Embarrassment feels permanent.",
+    deeper: "But memory fades quickly for others.",
+    reframe: "Moments shrink with time."
+  },
+
+  "It will define me.": {
+    final: true,
+    insight: "Identity feels fragile under pressure.",
+    deeper: "But identity is built over patterns, not incidents.",
+    reframe: "One event cannot rewrite who you are."
+  },
+
+  "I might not perform perfectly.": [
+    "Perfection is expected.",
+    "Mistakes aren’t allowed."
+  ],
+
+  "Perfection is expected.": {
+    final: true,
+    insight: "Perfection is often self-imposed.",
+    deeper: "Growth requires imperfection.",
+    reframe: "Progress beats perfection."
+  },
+
+  "Mistakes aren’t allowed.": {
+    final: true,
+    insight: "That belief creates paralysis.",
+    deeper: "Mistakes are data, not disasters.",
+    reframe: "Improvement lives inside errors."
+  },
+
+  // --- Expectations Branch
+
+  "Someone’s expectations.": [
+    "I don’t want to disappoint them.",
+    "They believe I’m better than I am.",
+    "They expect consistency."
+  ],
+
+  "I don’t want to disappoint them.": [
+    "Disappointment feels like rejection.",
+    "I need their approval."
+  ],
+
+  "Disappointment feels like rejection.": {
+    final: true,
+    insight: "You link approval to connection.",
+    deeper: "But connection survives imperfection.",
+    reframe: "Respect isn’t conditional on flawlessness."
+  },
+
+  "I need their approval.": {
+    final: true,
+    insight: "External validation feels stabilizing.",
+    deeper: "But self-trust builds deeper security.",
+    reframe: "Approval is optional. Self-belief isn’t."
+  },
+
+  "They believe I’m better than I am.": [
+    "I’m afraid they’ll see flaws.",
+    "I feel like an imposter."
+  ],
+
+  "I’m afraid they’ll see flaws.": {
+    final: true,
+    insight: "Vulnerability feels risky.",
+    deeper: "But authenticity builds stronger bonds.",
+    reframe: "Flaws make you human, not fraudulent."
+  },
+
+  "I feel like an imposter.": {
+    final: true,
+    insight: "Imposter syndrome appears during growth.",
+    deeper: "It signals expansion, not incompetence.",
+    reframe: "You’re stretching — not faking."
+  },
+
+  // ================= PATH B =================
+  // SELF-PERCEPTION
+
+  "It’s about how I see myself.": [
+    "I feel behind.",
+    "I compare constantly.",
+    "I overthink everything."
+  ],
+
+  "I feel behind.": [
+    "Career-wise.",
+    "Life milestones.",
+    "Financially."
+  ],
+
+  "Career-wise.": [
+    "Others are ahead.",
+    "I chose wrong."
+  ],
+
+  "Others are ahead.": {
+    final: true,
+    insight: "You’re measuring speed.",
+    deeper: "But life isn’t synchronized.",
+    reframe: "Different timelines. Different growth."
+  },
+
+  "I chose wrong.": {
+    final: true,
+    insight: "Doubt appears during uncertainty.",
+    deeper: "But paths evolve.",
+    reframe: "Adjustment isn’t failure."
+  },
+
+  "I compare constantly.": [
+    "Social media triggers it.",
+    "Friends’ success triggers it."
+  ],
+
+  "Social media triggers it.": {
+    final: true,
+    insight: "Online life is curated.",
+    deeper: "Comparison ignores context.",
+    reframe: "Highlights are not full stories."
+  },
+
+  "Friends’ success triggers it.": {
+    final: true,
+    insight: "Success feels competitive.",
+    deeper: "But growth isn’t zero-sum.",
+    reframe: "Their win doesn’t reduce yours."
+  },
+
+  "I overthink everything.": [
+    "I replay conversations.",
+    "I predict worst outcomes."
+  ],
+
+  "I replay conversations.": {
+    final: true,
+    insight: "Replaying feels like control.",
+    deeper: "But it keeps you stuck.",
+    reframe: "Reflection helps. Rumination traps."
+  },
+
+  "I predict worst outcomes.": {
+    final: true,
+    insight: "Your brain predicts to protect.",
+    deeper: "Fear exaggerates probability.",
+    reframe: "Preparation works. Catastrophizing doesn’t."
   }
 };
 
