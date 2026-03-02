@@ -449,6 +449,34 @@ function createScatterEffect(x, y) {
   }
 }
 
+function startBubblePopGame() {
+  bubbleContainer.innerHTML = "";
+
+  let remaining = 5;
+
+  for (let i = 0; i < 5; i++) {
+    const mini = document.createElement("div");
+    mini.classList.add("mini-bubble");
+
+    mini.style.left = Math.random() * (window.innerWidth - 60) + "px";
+    mini.style.top = Math.random() * (window.innerHeight - 60) + "px";
+
+    mini.addEventListener("click", () => {
+      mini.classList.add("pop-animation");
+      setTimeout(() => mini.remove(), 200);
+      remaining--;
+
+      if (remaining === 0) {
+        setTimeout(() => {
+          resetToRoot();
+        }, 400);
+      }
+    });
+
+    bubbleContainer.appendChild(mini);
+  }
+}
+
 function showFinalInsight(data) {
   bubbleContainer.innerHTML = "";
 
