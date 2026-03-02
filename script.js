@@ -1,6 +1,9 @@
 console.log("JS loaded");
 const bubbleContainer = document.getElementById("bubble-container");
 
+let currentState = "root";
+let stateHistory = [];
+
 const emotionTree = {
   root: ["Throw the stress away."],
 
@@ -267,7 +270,6 @@ const emotionTree = {
   }
 };
 
-let currentState = "root";
 
 function createBubble(text, index, total) {
   const bubble = document.createElement("div");
@@ -288,30 +290,80 @@ function renderState(state) {
   bubbleContainer.innerHTML = "";
 
   const options = emotionTree[state];
-  if (!options || !Array.isArray(options)) return;
+  if (!options) return;
 
-  const total = options.length;
-    options.forEach((text, index) => {
-    createBubble(text, index, total);
+  // ===== ROOT SPECIAL CASE =====
+  if (state === "root") {
+    const bubble = document.createElement("div");
+    bubble.classList.add("bubble");
+    bubble.style.left = "50%";
+    bubble.style.top = "50%";
+    bubble.style.transform = "translate(-50%, -50%) scale(1.2)";
+    bubble.innerText = options[0];
+
+    bubble.addEventListener("click", () => handleBubbleClick(options[0]));
+
+    bubbleContainer.appendChild(bubble);
+    return;
+  }
+
+  // ===== Progress Indicator =====
+  const progress = document.createElement("div");
+  progress.style.position = "absolute";
+  progress.style.top = "20px";
+  progress.style.left = "50%";
+  progress.style.transform = "translateX(-50%)";
+  progress.style.opacity = "0.5";
+  progress.style.fontSize = "14px";
+  progress.innerText = `Step ${stateHistory.length + 1} of 6`;
+  bubbleContainer.appendChild(progress);
+
+  if (stateHistory.length > 0) {
+  const back = document.createElement("div");
+  back.innerText = "← Back";
+  back.style.position = "absolute";
+  back.style.top = "20px";
+  back.style.left = "20px";
+  back.style.opacity = "0.5";
+  back.style.cursor = "pointer";
+
+  back.addEventListener("click", () => {
+    currentState = stateHistory.pop();
+    renderState(currentState);
   });
+
+  bubbleContainer.appendChild(back);
+}
+
+  // ===== Render Options Evenly =====
+  if (Array.isArray(options)) {
+    const total = options.length;
+
+    options.forEach((text, index) => {
+      createBubble(text, index, total);
+    });
+  }
 }
 
 function handleBubbleClick(text) {
   const next = emotionTree[text];
-
   if (!next) return;
 
+  stateHistory.push(currentState);
+
   bubbleContainer.style.opacity = "0";
+
   setTimeout(() => {
     bubbleContainer.style.opacity = "1";
 
-  if (next.final) {
-    showFinalInsight(next);
-  } else {
-    currentState = text;
-    renderState(currentState);
-  }
-}, 300);
+    if (next.final) {
+      currentState = text; // <-- important small fix
+      showFinalInsight(next);
+    } else {
+      currentState = text;
+      renderState(currentState);
+    }
+  }, 300);
 }
 
 function showFinalInsight(data) {
@@ -319,19 +371,53 @@ function showFinalInsight(data) {
 
   const bubble = document.createElement("div");
   bubble.classList.add("bubble");
+  bubble.style.background = "rgba(255,255,255,0.12)";
+bubble.style.border = "1px solid rgba(255,255,255,0.25)";
+
   bubble.style.left = "50%";
   bubble.style.top = "50%";
-  bubble.style.transform = "translate(-50%, -50%)";
-  bubble.style.maxWidth = "400px";
+  bubble.style.transform = "translate(-50%, -50%) scale(0.8)";
+  bubble.style.maxWidth = "500px";
   bubble.style.textAlign = "center";
+  bubble.style.padding = "30px";
 
   bubble.innerHTML = `
-    <div style="font-size:18px; margin-bottom:10px;">${data.insight}</div>
-    <div style="opacity:0.8; margin-bottom:15px;">${data.deeper}</div>
-    <div style="font-weight:600;">${data.reframe}</div>
+    <div style="font-size:18px; margin-bottom:12px;">
+      ${data.insight}
+    </div>
+    <div style="opacity:0.8; margin-bottom:15px;">
+      ${data.deeper}
+    </div>
+    <div style="font-weight:600;">
+      ${data.reframe}
+    </div>
   `;
 
   bubbleContainer.appendChild(bubble);
+
+  // Animate pop-in
+  setTimeout(() => {
+    bubble.style.transition = "all 0.4s ease";
+    bubble.style.transform = "translate(-50%, -50%) scale(1)";
+  }, 50);
+
+  // Reset option
+  const restart = document.createElement("div");
+  restart.innerText = "Start again";
+  restart.style.position = "absolute";
+  restart.style.bottom = "40px";
+  restart.style.left = "50%";
+  restart.style.transform = "translateX(-50%)";
+  restart.style.opacity = "0.5";
+  restart.style.cursor = "pointer";
+
+  restart.addEventListener("click", () => {
+    stateHistory = [];
+    currentState = "root";
+    renderState("root");
+  });
+
+  bubbleContainer.appendChild(restart);
 }
 
-renderState(currentState);
+renderState("root");
