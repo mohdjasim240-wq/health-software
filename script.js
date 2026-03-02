@@ -89,13 +89,15 @@ const emotionTree = {
 
 let currentState = "root";
 
-function createBubble(text) {
+function createBubble(text, index, total) {
   const bubble = document.createElement("div");
   bubble.classList.add("bubble");
   bubble.innerText = text;
 
-  bubble.style.top = Math.random() * 70 + "%";
-  bubble.style.left = Math.random() * 70 + "%";
+  const spacing = 100 / (total + 1);
+  bubble.style.top = "50%";
+  bubble.style.left = `${spacing * (index + 1)}%`;
+  bubble.style.transform = "translate(-50%, -50%)";
 
   bubble.addEventListener("click", () => handleBubbleClick(text));
 
@@ -104,8 +106,13 @@ function createBubble(text) {
 
 function renderState(state) {
   bubbleContainer.innerHTML = "";
-  emotionTree[state].forEach(text => {
-    createBubble(text);
+
+  const options = emotionTree[state];
+  if (!options || !Array.isArray(options)) return;
+
+  const total = options.length;
+    options.forEach((text, index) => {
+    createBubble(text, index, total);
   });
 }
 
@@ -114,12 +121,17 @@ function handleBubbleClick(text) {
 
   if (!next) return;
 
+  bubbleContainer.style.opacity = "0";
+  setTimeout(() => {
+    bubbleContainer.style.opacity = "1";
+
   if (next.final) {
     showFinalInsight(next);
   } else {
     currentState = text;
     renderState(currentState);
   }
+}, 300);
 }
 
 function showFinalInsight(data) {
