@@ -134,6 +134,25 @@ const emotionTree = {
     reframe: "You’re stretching — not faking."
   },
 
+  "They expect consistency.": [
+  "If I slip once, they’ll doubt me.",
+  "I always have to be reliable."
+],
+
+"If I slip once, they’ll doubt me.": {
+  final: true,
+  insight: "Consistency feels tied to credibility.",
+  deeper: "But trust isn’t erased by one fluctuation.",
+  reframe: "Reliability is built over patterns, not perfection."
+},
+
+"I always have to be reliable.": {
+  final: true,
+  insight: "Carrying responsibility feels heavy.",
+  deeper: "But you’re allowed to have off days.",
+  reframe: "Strength includes rest."
+},
+
   "A conversation I’m nervous about.": [
   "I’m afraid I’ll say the wrong thing.",
   "I’m afraid of their reaction.",
@@ -230,6 +249,42 @@ const emotionTree = {
     deeper: "But paths evolve.",
     reframe: "Adjustment isn’t failure."
   },
+  "Life milestones.": [
+  "Others are settling down.",
+  "I feel late compared to peers."
+],
+
+"Others are settling down.": {
+  final: true,
+  insight: "Milestones look universal.",
+  deeper: "But timing is deeply personal.",
+  reframe: "Life isn’t a synchronized race."
+},
+
+"I feel late compared to peers.": {
+  final: true,
+  insight: "You’re comparing timelines.",
+  deeper: "But progress isn’t uniform.",
+  reframe: "Late according to who?"
+},
+"Financially.": [
+  "Others earn more than me.",
+  "I’m not where I thought I’d be."
+],
+
+"Others earn more than me.": {
+  final: true,
+  insight: "Income feels like a scoreboard.",
+  deeper: "But financial journeys differ drastically.",
+  reframe: "Security grows steadily, not instantly."
+},
+
+"I’m not where I thought I’d be.": {
+  final: true,
+  insight: "Expectations create pressure.",
+  deeper: "Reality rarely follows early predictions.",
+  reframe: "Adjustment is growth, not failure."
+},
 
   "I compare constantly.": [
     "Social media triggers it.",
